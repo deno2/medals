@@ -1,27 +1,20 @@
 (ns medals.core
   (:require
-   [reagent.core :as r]))
+   [reagent.core :as r]
+   [medals.widget :as widget]))
 
 ;; -------------------------
 ;; Views
-
-
-(defn medals
-  ([]
-   (medals "gold"))
-  ([sort]
-   [:div.medals-widget
-    [:h3 "Medal Count"]]))
 
 
 (defn home-page []
   [:div [:h2 "Medals Widget Demo"]
    [:div
     [:p "Default widget with no parameters (defaults to sorted by gold medals):"]
-    [medals]]
+    [widget/medals]]
    [:div
     [:p "Widget with initial sort set to 'gold':"]
-    [medals "gold"]]])
+    [widget/medals "gold"]]])
 
 ;; -------------------------
 ;; Initialize app
