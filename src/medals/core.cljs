@@ -14,7 +14,8 @@
     [widget/medals]]
    [:div
     [:p "Widget with initial sort set to 'gold':"]
-    [widget/medals "gold"]]])
+    ;;[widget/medals "gold"]
+    ]])
 
 ;; -------------------------
 ;; Initialize app
