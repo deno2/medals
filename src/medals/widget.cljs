@@ -9,7 +9,6 @@
 
 ; (def config {:data-uri "https://s3-us-west-2.amazonaws.com/reuters.medals-widget/medals.json"
 ;              :flags-uri "https://s3-us-west-2.amazonaws.com/reuters.medals-widget/flags.png"})
-
 (def config {:data-uri "data/medals.json"
              :flags-uri "images/flags.png"})
 
@@ -22,7 +21,9 @@
            :widget-state :ready}))
 
 
-(defn sort-key [s]
+(defn sort-key
+  "Takes a string and returns a cleaned keyword for the sort key."
+  [s]
   (let [key (-> s
                 name
                 clojure.string/trim
@@ -55,6 +56,7 @@
                                 (:bronze medal))))
        medals))
 
+
 (defn process-medals!
   "Sorts the medals and prepares them for the view."
   [state sort-key]
@@ -65,6 +67,7 @@
                                                               :index (inc idx)))
                                                      sorted-medals))
            :sort-key sort-key)))
+
 
 (defn load-data!
   "Loads the medal data from a json file on the server."
@@ -112,8 +115,14 @@
 
 (defn medal-table [state]
   (println "Medal Table sorted by: " (:sort-key @state))
-  (let [sorted-by? (fn [k] (when (= k (:sort-key @state))
-                             {:class "sorted"}))]
+  (let [sorted-by? (fn sorted-by? [k] (when (= k (:sort-key @state))
+                                        {:class "sorted"}))
+        sorting-header (fn sorting-header [sort-key] [:th.sortable (merge {:on-click (fn [e] (process-medals! state sort-key))
+                                                                           :title (str "Sort by " (clojure.string/capitalize (name sort-key)))}
+                                                                          (sorted-by? sort-key))
+                                                      [:div {:class [(name sort-key) (when (#{:gold :silver :bronze} sort-key)
+                                                                                       "circle")]}
+                                                       (when (= :total sort-key) "TOTAL")]])]
     (if (:loading? @state)
       [loading-message]
       (if (:error? @state)
@@ -122,22 +131,13 @@
          [:thead
           [:tr.medals-header-row
            [:th {:col-span 3}]
-           [:th.sortable (merge {:on-click (fn [e] (process-medals! state :gold))
-                                 :title "Sort by Gold"}
-                                (sorted-by? :gold)) [:div.circle.gold]]
-           [:th.sortable (merge {:on-click (fn [e] (process-medals! state :silver))
-                                 :title "Sort by Silver"}
-                                (sorted-by? :silver)) [:div.circle.silver]]
-           [:th.sortable (merge {:on-click (fn [e] (process-medals! state :bronze))
-                                 :title "Sort by Bronze"}
-                                (sorted-by? :bronze)) [:div.circle.bronze]]
-           [:th.sortable (merge {:on-click (fn [e] (process-medals! state :total))
-                                 :title "Sort by Total"}
-                                (sorted-by? :total)) [:div.total "Total"]]]]
+           [sorting-header :gold]
+           [sorting-header :silver]
+           [sorting-header :bronze]
+           [sorting-header :total]]]
          [:tbody
           (for [medal (:medals @state)]
             ^{:key (:index medal)} [medal-row medal])]]))))
-
 
 
 (defn medals
