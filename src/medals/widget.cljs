@@ -110,20 +110,23 @@
       [loading-message]
       [:table.medals-table
        [:thead
-        [:tr.medals-header
+        [:tr.medals-header-row
          [:th {:col-span 3}]
-         [:th (merge {:on-click (fn [e] (process-medals! state :gold))}
-                     (sorted-by? :gold)) [:div.circle.gold "Gold"]]
-         [:th (merge {:on-click (fn [e] (process-medals! state :silver))}
-                     (sorted-by? :silver)) [:div.circle.gold "Silver"]]
-         [:th (merge {:on-click (fn [e] (process-medals! state :bronze))}
-                     (sorted-by? :bronze)) [:div.circle.gold "Bronze"]]
-         [:th (merge {:on-click (fn [e] (process-medals! state :total))}
-                     (sorted-by? :total)) [:div.circle.gold "Total"]]]]
+         [:th.sortable (merge {:on-click (fn [e] (process-medals! state :gold))
+                               :title "Sort by Gold"}
+                              (sorted-by? :gold)) [:div.circle.gold]]
+         [:th.sortable (merge {:on-click (fn [e] (process-medals! state :silver))
+                               :title "Sort by Silver"}
+                              (sorted-by? :silver)) [:div.circle.silver]]
+         [:th.sortable (merge {:on-click (fn [e] (process-medals! state :bronze))
+                               :title "Sort by Bronze"}
+                              (sorted-by? :bronze)) [:div.circle.bronze]]
+         [:th.sortable (merge {:on-click (fn [e] (process-medals! state :total))
+                               :title "Sort by Total"}
+                              (sorted-by? :total)) [:div.total "Total"]]]]
        [:tbody
         (for [medal (:medals @state)]
-          (do (println medal)
-              ^{:key (:index medal)} [medal-row medal]))]])))
+          ^{:key (:index medal)} [medal-row medal])]])))
 
 
 
@@ -137,6 +140,5 @@ or total medals. Clicking a header will sort by that column."
          _ (load-data! state)]
      (fn render-fn [sort]
        [:div.medals-widget
-        [:div (str @state)]
-        [:h3 "Medal Count"]
+        [:h3.medals-header "Medal Count"]
         [medal-table state]]))))

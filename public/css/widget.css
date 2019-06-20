@@ -1,0 +1,29 @@
+div .circle {
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.medals-header-row th {
+  padding: 5px;
+}
+
+.medals-header-row th.sortable {
+  cursor: pointer;
+}
+.gold {
+  background-color: gold;
+}
+.silver {
+  background-color: silver;
+}
+.bronze {
+  background-color: chocolate;
+}
+.total {
+  text-transform: uppercase;
+}
+.sorted {
+  border-top: 2px solid grey;
+}
