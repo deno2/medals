@@ -31,9 +31,19 @@
       key
       :gold)))
 
+(def sort-table {:gold [:gold :silver]
+                 :total [:total :gold]
+                 :silver [:silver :gold]
+                 :bronze [:bronze :gold]})
+
 (defn sort-medals [medals sort-key]
-  (let [])
-  medals)
+  (let [sort-fn (apply juxt (get sort-table sort-key))
+        cmp-fn (fn [a b]
+                 (compare b a))]
+    ;; Note: Using the custom compare fn to reverse the order here
+    ;; because using > sorts by alpabetical order s-)
+    (sort-by sort-fn cmp-fn medals)))
+
 
 (defn assoc-totals [medals]
   (map (fn [medal]
@@ -41,7 +51,6 @@
                                 (:silver medal)
                                 (:bronze medal))))
        medals))
-
 
 (defn process-medals! [state sort-key]
   (println "Process Medals")
@@ -93,8 +102,6 @@
    [:td total]])
 
 
-
-
 (defn medal-table [state]
   (println "Medal Table sorted by: " (:sort-key @state))
   (let [sorted-by? (fn [k] (when (= k (:sort-key @state))
@@ -121,6 +128,8 @@
 
 
 (defn medals
+  "Renders a table of Olympic Medals sorted by either gold, silver, bronze 
+or total medals. Clicking a header will sort by that column."
   ([]
    (medals "gold"))
   ([sort]
