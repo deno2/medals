@@ -1,3 +1,21 @@
+div .medals-widget {
+  border: 1px solid lightgrey;
+  border-left: 0;
+  border-bottom: 0;
+  padding: 2px;
+}
+
+.medals-header {
+  font-family: Arial, Helvetica, sans-serif;
+  text-transform: uppercase;
+  color: gray;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+}
+
 div .circle {
   height: 25px;
   width: 25px;
@@ -5,8 +23,37 @@ div .circle {
   display: inline-block;
 }
 
+.medals-table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  display: table;
+  color: darkslategray;
+}
+
+.medals-table td {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: normal;
+  text-align: center;
+}
+
+.medals-table tr {
+  border-bottom: 1px solid lightgray;
+}
+
+.medals-table .code {
+  width: 100px;
+  text-align: left;
+}
+
+.medals-table .code,
+.medals-table .total {
+  font-weight: bold;
+}
+
 .medals-header-row th {
   padding: 5px;
+  border-bottom: 3px solid grey;
 }
 
 .medals-header-row th.sortable {
@@ -25,5 +72,66 @@ div .circle {
   text-transform: uppercase;
 }
 .sorted {
-  border-top: 2px solid grey;
+  border-top: 3px solid grey;
+}
+
+.flag {
+  width: 28px;
+  height: 17px;
+  display: inline-block;
+  background-image: url(/images/flags.png);
+}
+
+/* [0, 17, 34, 51, 68, 85, 102, 119, 136, 153, 170, 187, 204] */
+
+.aut {
+  background-position: 0px -0px;
+}
+
+.blr {
+  background-position: 0px -17px;
+}
+
+.can {
+  background-position: 0px -34px;
+}
+
+.chn {
+  background-position: 0px -51px;
+}
+
+.fra {
+  background-position: 0px -68px;
+}
+
+.ger {
+  background-position: 0px -85px;
+}
+
+.ita {
+  background-position: 0px -102px;
+}
+
+.ned {
+  background-position: 0px -119px;
+}
+
+.nor {
+  background-position: 0px -136px;
+}
+
+.rus {
+  background-position: 0px -153px;
+}
+
+.sui {
+  background-position: 0px -170px;
+}
+
+.swe {
+  background-position: 0px -187px;
+}
+
+.usa {
+  background-position: 0px -204px;
 }

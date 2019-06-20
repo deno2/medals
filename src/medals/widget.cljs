@@ -21,6 +21,7 @@
            :sort-key sort-key
            :widget-state :ready}))
 
+
 (defn sort-key [s]
   (let [key (-> s
                 name
@@ -31,10 +32,12 @@
       key
       :gold)))
 
+
 (def sort-table {:gold [:gold :silver]
                  :total [:total :gold]
                  :silver [:silver :gold]
                  :bronze [:bronze :gold]})
+
 
 (defn sort-medals [medals sort-key]
   (let [sort-fn (apply juxt (get sort-table sort-key))
@@ -52,7 +55,9 @@
                                 (:bronze medal))))
        medals))
 
-(defn process-medals! [state sort-key]
+(defn process-medals!
+  "Sorts the medals and prepares them for the view."
+  [state sort-key]
   (println "Process Medals")
   (let [sorted-medals (sort-medals (:raw-data @state) sort-key)]
     (swap! state assoc :medals (take 10 (map-indexed (fn [idx medal]
@@ -61,7 +66,9 @@
                                                      sorted-medals))
            :sort-key sort-key)))
 
-(defn load-data! [state]
+(defn load-data!
+  "Loads the medal data from a json file on the server."
+  [state]
   (println "Loading Medals")
   (swap! state assoc :loading? true :error? false)
   (ajax/GET
@@ -81,25 +88,26 @@
 ;; Views
 ;;;;;;;;;;;;;;;;;;;;;;;
 (defn loading-message []
-  [:div "LOADING"])
+  [:div.loading-message "LOADING"])
+
 
 (defn error-message []
-  [:div "There was an error loading data from the server. Please try again later."])
+  [:div.error-message "There was an error loading data from the server. Please try again later."])
 
 
 (defn flag [{:keys [code] :as medal}]
   [:div.flag {:class (clojure.string/lower-case code)}])
 
+
 (defn medal-row [{:keys [index code gold silver bronze total] :as medal}]
-  (println "Medal Row")
   [:tr
    [:td index]
    [:td [flag medal]]
-   [:td code]
+   [:td.code code]
    [:td gold]
    [:td silver]
    [:td bronze]
-   [:td total]])
+   [:td.total total]])
 
 
 (defn medal-table [state]
@@ -108,25 +116,27 @@
                              {:class "sorted"}))]
     (if (:loading? @state)
       [loading-message]
-      [:table.medals-table
-       [:thead
-        [:tr.medals-header-row
-         [:th {:col-span 3}]
-         [:th.sortable (merge {:on-click (fn [e] (process-medals! state :gold))
-                               :title "Sort by Gold"}
-                              (sorted-by? :gold)) [:div.circle.gold]]
-         [:th.sortable (merge {:on-click (fn [e] (process-medals! state :silver))
-                               :title "Sort by Silver"}
-                              (sorted-by? :silver)) [:div.circle.silver]]
-         [:th.sortable (merge {:on-click (fn [e] (process-medals! state :bronze))
-                               :title "Sort by Bronze"}
-                              (sorted-by? :bronze)) [:div.circle.bronze]]
-         [:th.sortable (merge {:on-click (fn [e] (process-medals! state :total))
-                               :title "Sort by Total"}
-                              (sorted-by? :total)) [:div.total "Total"]]]]
-       [:tbody
-        (for [medal (:medals @state)]
-          ^{:key (:index medal)} [medal-row medal])]])))
+      (if (:error? @state)
+        [error-message]
+        [:table.medals-table
+         [:thead
+          [:tr.medals-header-row
+           [:th {:col-span 3}]
+           [:th.sortable (merge {:on-click (fn [e] (process-medals! state :gold))
+                                 :title "Sort by Gold"}
+                                (sorted-by? :gold)) [:div.circle.gold]]
+           [:th.sortable (merge {:on-click (fn [e] (process-medals! state :silver))
+                                 :title "Sort by Silver"}
+                                (sorted-by? :silver)) [:div.circle.silver]]
+           [:th.sortable (merge {:on-click (fn [e] (process-medals! state :bronze))
+                                 :title "Sort by Bronze"}
+                                (sorted-by? :bronze)) [:div.circle.bronze]]
+           [:th.sortable (merge {:on-click (fn [e] (process-medals! state :total))
+                                 :title "Sort by Total"}
+                                (sorted-by? :total)) [:div.total "Total"]]]]
+         [:tbody
+          (for [medal (:medals @state)]
+            ^{:key (:index medal)} [medal-row medal])]]))))
 
 
 

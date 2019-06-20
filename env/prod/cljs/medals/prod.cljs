@@ -1,6 +1,6 @@
 (ns medals.prod
   (:require
-    [medals.core :as core]))
+   [medals.core :as core]))
 
 ;;ignore println statements in prod
 (set! *print-fn* (fn [& _]))

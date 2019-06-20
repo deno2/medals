@@ -13,9 +13,8 @@
     [:p "Default widget with no parameters (defaults to sorted by gold medals):"]
     [widget/medals]]
    [:div
-    [:p "Widget with initial sort set to 'gold':"]
-    ;;[widget/medals "gold"]
-    ]])
+    [:p "Widget with initial sort set to 'bronze':"]
+    [widget/medals "bronze"]]])
 
 ;; -------------------------
 ;; Initialize app
